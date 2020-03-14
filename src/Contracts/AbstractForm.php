@@ -8,6 +8,8 @@
 
 namespace Robotateme\Validation\Contracts;
 
+use Robotateme\Validation\Exceptions\ValidationException;
+
 abstract class AbstractForm
 {
     /**
@@ -38,10 +40,6 @@ abstract class AbstractForm
      */
     protected $strictProperties = false;
 
-    /**
-     * @return mixed
-     */
-    abstract public function validate();
 
     /**
      * @param $data
@@ -68,6 +66,54 @@ abstract class AbstractForm
     public function setStrictProperties(bool $strictProperties): void
     {
         $this->strictProperties = $strictProperties;
+    }
+
+    /**
+     * @return bool
+     */
+    public function validate()
+    {
+        foreach ($this->fieldSet as $attribute => $validators) {
+            /** @var AbstractValidator $validator */
+            foreach ($validators as $validator) {
+                if ($validator->validate($attribute, $this->{$attribute})) {
+                    $this->successfully[$attribute] = $this->{$attribute};
+                } else {
+                    $this->errors[$attribute][] = $validator->message;
+                    $this->failed[$attribute]   = $this->{$attribute};
+                }
+
+                $this->validated[$attribute] = $this->{$attribute};
+            }
+        }
+
+        return (bool) count($this->failed);
+    }
+
+    /**
+     * @param string $attribute
+     * @param array  $validators
+     *
+     * @return $this
+     * @throws ValidationException
+     *
+     */
+    public function addRule(string $attribute, $validators = [])
+    {
+
+        if (true) {
+            foreach ($validators as $Validator) {
+                if ($Validator instanceof AbstractValidator) {
+                    $this->fieldSet[$attribute][] = $Validator;
+                    continue;
+                } else {
+                    throw new ValidationException("Validator should be instance of " . AbstractValidator::class);
+                }
+            }
+
+            return $this;
+        }
+        throw new ValidationException("Unknown form attribute {$attribute}");
     }
 
 
