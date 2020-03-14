@@ -31,6 +31,7 @@ class MaxLengthValidator extends AbstractValidator
 
     public function validate($attribute, $value)
     {
+        $this->drawMessage($attribute);
         return strlen($value) < $this->length;
     }
 

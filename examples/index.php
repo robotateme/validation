@@ -38,6 +38,8 @@ $form->addRule('email',
 );
 
 $form->validate();
+
+
 //var_dump($form->errors);
 //var_dump($form->failed);
 //var_dump($form->validated);

@@ -8,9 +8,10 @@
 
 namespace Examples\Forms;
 
+use Robotateme\Validation\Contracts\AbstractForm;
 use Robotateme\Validation\Form;
 
-class SignUpForm extends Form
+class SignUpForm extends AbstractForm
 {
     public $strictProperties = true;
 
@@ -20,4 +21,11 @@ class SignUpForm extends Form
     public $passwordConfirm;
 
 
+    /**
+     * @return mixed
+     */
+    public function validate()
+    {
+        // TODO: Implement validate() method.
+    }
 }
