@@ -56,15 +56,12 @@ abstract class AbstractForm
     /**
      * Form constructor.
      *
-     * @param array $data
      * @param array $fieldSet
      *
-     * @throws ValidationException
      */
-    public function __construct(array $data = [], array $fieldSet = [])
+    public function __construct(array $fieldSet = [])
     {
         $this->setFieldSet($fieldSet);
-        $this->setData($data);
     }
 
     /**
