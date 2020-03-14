@@ -44,12 +44,27 @@ abstract class AbstractForm
     /**
      * @param $data
      *
+     * @throws ValidationException
      */
     public function setData($data)
     {
         foreach ($data as $attribute => $value) {
             $this->{$attribute} = $value;
         }
+    }
+
+    /**
+     * Form constructor.
+     *
+     * @param array $data
+     * @param array $fieldSet
+     *
+     * @throws ValidationException
+     */
+    public function __construct(array $data = [], array $fieldSet = [])
+    {
+        $this->setFieldSet($fieldSet);
+        $this->setData($data);
     }
 
     /**
@@ -101,20 +116,31 @@ abstract class AbstractForm
     public function addRule(string $attribute, $validators = [])
     {
 
-        if (true) {
-            foreach ($validators as $Validator) {
-                if ($Validator instanceof AbstractValidator) {
-                    $this->fieldSet[$attribute][] = $Validator;
-                    continue;
-                } else {
-                    throw new ValidationException("Validator should be instance of " . AbstractValidator::class);
-                }
+        foreach ($validators as $Validator) {
+            if ($Validator instanceof AbstractValidator) {
+                $this->fieldSet[$attribute][] = $Validator;
+                continue;
+            } else {
+                throw new ValidationException("Validator should be instance of " . AbstractValidator::class);
             }
-
-            return $this;
         }
-        throw new ValidationException("Unknown form attribute {$attribute}");
+
+        return $this;
+
     }
 
+    /**
+     * @param $name
+     * @param $value
+     *
+     * @throws ValidationException
+     */
+    public function __set($name, $value)
+    {
+        if (!property_exists(static::class, $name) && $this->strictProperties == true) {
+            throw new ValidationException("Unknown form attribute {$name}");
+        }
+        $this->{$name} = $value;
+    }
 
 }

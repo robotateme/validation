@@ -12,15 +12,6 @@ use Robotateme\Validation\Contracts\AbstractForm;
 
 class Form extends AbstractForm
 {
-    /**
-     * Form constructor.
-     *
-     * @param array $data
-     * @param array $fieldSet
-     */
-    public function __construct(array $data = [], array $fieldSet = [])
-    {
-        $this->setFieldSet($fieldSet);
-        $this->setData($data);
-    }
+    protected $strictProperties = false;
+
 }
